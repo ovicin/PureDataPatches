@@ -1,0 +1,88 @@
+#N canvas 160 24 700 380 10;
+#X obj 10 10 granitique;
+#X obj 315 355 dac~;
+#N canvas 138 46 804 474 readme 1;
+#X text -362 308 - cyclone (Scope~);
+#X text -362 293 - the ubiquitous freeverb~;
+#X text -360 375 Alberto Zin \, 2011;
+#X text -359 388 http://sites.google.com/site/albertozin/;
+#X text 46 96 - horizon: length of block for random events;
+#X text 46 73 - scale: a frequency grid for pitch constraint;
+#X text 46 84 - grains: number of grains generated;
+#X text 46 107 - low_freq: minimum frequency for a grain.;
+#X text 46 119 - high_freq: maximum frequency for a grain.;
+#X text 46 131 - left_pan: minimum pan for a grain;
+#X text 45 143 - right_pan: minimum pan for a grain;
+#X text 46 155 - min_gr_size: minumum duration for a grain;
+#X text 46 166 - max_gr_size: maximum duration for a grain.;
+#X text 46 178 - grain envelope;
+#X text 46 190 - grain waveform;
+#X text 46 202 - min_amp: minimum amplitude for a grain float.;
+#X text 46 215 - max_amp: minimum amplitude for a grain float.;
+#X text 46 229 - steady: toggles pulsed rhythmic activity;
+#X text 46 242 - method: spray or pitched spray (constrained into a
+scale);
+#X text 48 309 - main_volume;
+#X text 48 321 - room size;
+#X text 48 332 - damping;
+#X text 48 345 - width;
+#X text 49 357 - wet/dry;
+#X text 49 370 - scope zoom;
+#X text 49 382 - mix 1/2;
+#X obj -360 13 cnv 15 800 30 empty empty GRANITIQUE 20 15 0 20 -1 -261234
+0;
+#X text -360 241 Externals required in order to run this patch:;
+#N canvas 0 0 450 435 MIT_License 0;
+#X text 34 70 The MIT License Copyright (c) <year> <copyright holders>
+Permission is hereby granted \, free of charge \, to any person obtaining
+a copy of this software and associated documentation files (the "Software")
+\, to deal in the Software without restriction \, including without
+limitation the rights to use \, copy \, modify \, merge \, publish
+\, distribute \, sublicense \, and/or sell copies of the Software \,
+and to permit persons to whom the Software is furnished to do so \,
+subject to the following conditions: The above copyright notice and
+this permission notice shall be included in all copies or substantial
+portions of the Software. THE SOFTWARE IS PROVIDED "AS IS" \, WITHOUT
+WARRANTY OF ANY KIND \, EXPRESS OR IMPLIED \, INCLUDING BUT NOT LIMITED
+TO THE WARRANTIES OF MERCHANTABILITY \, FITNESS FOR A PARTICULAR PURPOSE
+AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+BE LIABLE FOR ANY CLAIM \, DAMAGES OR OTHER LIABILITY \, WHETHER IN
+AN ACTION OF CONTRACT \, TORT OR OTHERWISE \, ARISING FROM \, OUT OF
+OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.;
+#X text 36 16 Lyon Potpourri (and therefore I suspect also this patch)
+is distributed under MIT license:;
+#X restore -348 437 pd MIT_License;
+#X text -360 256 - granule~ \, function~ (from LyonPoutpourry). MIT
+license (see below). They are here: http://www.somasa.qub.ac.uk/~elyon/LyonSoftware/Pd/
+;
+#X text -362 94 Granitique is a two voices granular synthesis toy that
+generates textures of sounds. The two voices can be mixed together.
+The sounds vary from random \, slow grains \, similar to wind chimes
+to crowded clouds of sounds remembering insects \, to sounds remembering
+falling water. Granule is a granular synthesis module reading from
+a stored waveform in a buffer. It's interesting how flexible granule~
+is! Storing and recalling of presets is done separately for voice 1
+and 2 Windows DLL are included for granule~ and function~.;
+#X text 53 56 Parameters - saved within a preset:;
+#X text 51 294 Parameters - NOT saved within a preset:;
+#X text -360 362 Feedback and comments to:;
+#X text -361 56 A granular instrument based on granule~ external by
+Eric Lyon (part of Lyon Potpourri collection of externals for MAX and
+pd). Granitique is a PureFun! (TM) project.;
+#N canvas 0 0 1139 667 sounds_like 0;
+#X msg 205 121 open \$1;
+#X obj 205 77 bng 15 250 50 0 empty empty empty 0 -6 0 10 -4034 -1
+-1;
+#X obj 205 98 openpanel;
+#X obj 205 162 image ./data/ct.gif;
+#X obj 669 2 image ./data/shower.gif;
+#X obj 495 255 image ./data/api_danza.gif;
+#X obj 964 197 image ./data/1Al.gif;
+#X text 126 -173 Granitique sounds like...;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X restore 57 436 pd sounds_like;
+#X restore 12 352 pd readme;
+#X connect 0 0 1 0;
+#X connect 0 1 1 1;

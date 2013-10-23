@@ -1,0 +1,180 @@
+#N canvas 0 0 627 726 10;
+#X obj 17 245 cnv 15 200 260 empty empty SoundGenEngine 20 12 0 14
+-233017 -66577 0;
+#X obj 87 286 noise~;
+#X obj 87 339 sound_gen;
+#X obj 100 468 dac~;
+#X obj 178 398 env~;
+#X floatatom 178 422 5 0 0 0 - - -;
+#X obj 28 405 env~;
+#X floatatom 28 428 5 0 0 0 - - -;
+#X obj 87 365 sound_out;
+#X obj 250 516 preset;
+#N canvas 0 0 470 320 cpu_load 0;
+#X obj 113 259 outlet;
+#X obj 113 170 cputime;
+#X obj 113 30 loadbang;
+#X obj 113 114 metro 1000;
+#X msg 113 58 1;
+#X floatatom 113 86 0 0 0 0 - - -;
+#X obj 113 142 t b b;
+#X obj 113 230 * 0.1;
+#X obj 113 199 int;
+#X text 158 86 <-- on/off;
+#X connect 1 0 8 0;
+#X connect 2 0 4 0;
+#X connect 3 0 6 0;
+#X connect 4 0 5 0;
+#X connect 5 0 3 0;
+#X connect 6 0 1 0;
+#X connect 6 1 1 1;
+#X connect 7 0 0 0;
+#X connect 8 0 7 0;
+#X restore 250 593 pd cpu_load;
+#X obj 250 619 s OS_workload;
+#X obj 17 89 cnv 15 590 140 empty empty Graphical_User_Interface 20
+12 0 14 -233017 -66577 0;
+#X obj 24 198 gripd;
+#X text 445 150 <-- Click;
+#X text 459 177 open GUI;
+#X text 464 164 here to;
+#X msg 72 199 show;
+#X msg 113 199 unlock;
+#X msg 166 199 lock;
+#X obj 18 520 cnv 15 200 120 empty empty Record_to_file 20 12 0 14
+-233017 -66577 0;
+#X msg 30 555 start;
+#X msg 30 596 stop;
+#X obj 85 606 writesf~ 2;
+#X msg 95 574 open OuterSpace.wav;
+#X obj 250 568 save_load_par;
+#X obj 250 542 random_preset;
+#X obj 250 491 norm_val;
+#X obj 17 11 cnv 15 590 70 empty empty empty 20 12 0 14 -33289 -66577
+0;
+#X obj 22 16 cnv 15 580 60 empty empty OuterSpace 20 12 0 25 -208318
+-66577 0;
+#X text 41 51 This is the lower layer to the OuterSpace GUI made in
+GriPD;
+#N canvas 0 0 484 685 readme_controls 0;
+#X text 11 41 - f0: base frequency [Hz]. All the band pass filters
+are tuned on multiple frequencies of f0 .;
+#X text 12 76 - Res: resonance control of the band-pass filter. Low
+values produce largets bandwidth \, higher values means a more "tuned"
+filter frequency;
+#X text 12 124 - Fr Spac: Frequency spacing (Df). The multiplier of
+the fundamental frequency. At the end \, the contral frequency of each
+bp filter will be tuned on f_N = f0 * n * Df + detune \, where n is
+the voice number (1 to 128) and detune is explained later;
+#X text 13 198 - Fr Detune: frequency detune (Halftones). During the
+attack and decaying phase the sound is detuned by the amount of halftones
+specified here;
+#X text 12 249 - PAN LFO: Panoramic Low Frequency Oscillator [Hz].
+Each voice moves in the stereo panorama with a frequency specified
+here (each voice independent from the others);
+#X text 12 298 - LFO spr: LFO spread. Not all voices moves in the stereo
+field at the same frequency but there will be a certain spread for
+each voice \, specified in % of the PAN LFO.;
+#X text 14 347 - Attack: [ms] similar to the attack time for each voice.
+In reality the true attack time is selected randomly based on random(Attack).
+For the amplitude envelope of each voice \, a quartic attack has been
+selected to produce "natural" results.;
+#X text 14 419 - Decay: [ms]. The same as attack.;
+#X text 15 440 - Hi-fr Damp: High-frequencies damping. A damping is
+provided in order to attenuate the very high frequencies which may
+be too loud. The amplitude of each voice is attenuated by the factor
+(1/x)^alpha \, where x is the voice number (1-128) and alpha is the
+parameter set here.;
+#X text 15 518 - Retrigg radio button: Activates the retrigger function
+- Retrigg: [ms]. Retriggering function. If this is not activated the
+attack of each voices is activated exactly when the decay part has
+been finished. Activating the retrigg radio button the attack part
+of each voice is retriggered independently every Retrigg ms.;
+#X text 12 7 PARAMETERS OF THE GRAPHICAL USER INTERFACE - Voice Controls
+;
+#X restore 250 273 pd readme_controls;
+#N canvas 0 0 508 445 readme_controls2 0;
+#X text 12 8 PARAMETERS OF THE GRAPHICAL USER INTERFACE - Main Controls
+-;
+#X text 13 38 - ON/OFF: activates/deactivates the instrument;
+#X text 13 63 - Polyphony: sets the instrument polyphony \, i.e. the
+number of parallel bp~ filters. In order to save CPU \, the voices
+that are not used are turned off using switch~. By lowering the number
+of voices a cut in the high frequencies is performed. In order to compensate
+for this use the freq. spac parameter to cover the same audio frequencies
+(but with less voices);
+#X text 14 162 - Density: sets the number of voices playing at the
+same time. This parameter has good results with sounds with short attackj
+and decay time (i.e. preset 2 \, "Bubbles");
+#X text 12 211 - Preset: changes the parameters for the 8 presets.
+;
+#X text 12 235 - Save: writes the current GUI parameters in a file
+\, to be later loaded. Provide a name for the file (for example with
+default extension .txt) and place them in the /data directory;
+#X text 13 301 - Load: loads a previously saved set of parameters;
+#X text 13 325 - Randomize: the fun of the game! try it to find your
+favourite sound in OuterSpace! Then \, remember to save it!;
+#X restore 250 299 pd readme_controls2;
+#N canvas 0 0 516 316 readme_controls3 0;
+#X text 19 16 comment;
+#X text 12 8 PARAMETERS OF THE GRAPHICAL USER INTERFACE - Reverb Controls
+-;
+#X text 10 55 - Gain: 1st stage of gain (db) \, used to amplify the
+reverb section;
+#X text 11 100 - Wet/Dry: [0-1] parameter that controls the full activation
+of the reverb effect.;
+#X text 12 143 - Room Size: [0-1] small - large room for reverberation
+;
+#X text 11 171 - Damp: [0-1] frequency damping within the reverberation
+algorithm;
+#X text 10 212 - Stereo Width [0-1]: placing of reverberated output
+in the stereo panorama.;
+#X restore 250 324 pd readme_controls3;
+#X text 248 250 GriPD GUI Controls:;
+#N canvas 0 0 472 599 readme 0;
+#X text 34 12 OUTERSPACE - An ambient sound generator by Alberto Zin
+- 2006;
+#X text 34 457 No warranty at all. The patch is provided "as-is" \,
+without any express or implied warranty. In no event shall the author
+be held liable for any damages arising for use of this patch.;
+#X text 35 65 OuterSpace is an instrument for PureData capable of generating
+audio effects like wind \, water \, "space" sounds.;
+#X text 34 356 The OuterSpace instrument is loosely based on the SpaceDrone
+instrument from Reaktor 5 library but since it is PD it is better (and
+free) :-). Joking.;
+#X text 179 427 WARRANTY;
+#X text 34 110 The instrument is based on white noise filtered by a
+bank of 128 (!) band-pass filters spread across the audible spectrum.
+Each filter contributes to the overall sound as a "voice". Each voice
+has a "quartic" attack and decay amplitude envelope triggered independently
+for a "natural" effect of attack and decay. Each voice is then placed
+in the stereo field and rotated from left to right following a low
+frequency oscillator (LFO) \, plus some spread. There is possibility
+of damping the high frequencies using a power law (1/x)^d \, where
+x is the frequency and d is the damp control. The output is reverberated
+using freeverb~. Few reverb parameters are implemented in the main
+control GUI. Keep an eye to the CPU load. On old machines 128 voices
+may hang up the audio. In this case try to reduce the polyphony to
+lower numbers. Doing so you'll loose the high frequency part of the
+spectrum but using frequency spacing parameter can compensate for this.
+;
+#X restore 533 271 pd readme;
+#X msg 24 147 open_locked ../extra/OuterSpace/OuterSpaceGUI.gpd;
+#X text 373 202 (first \, edit according to your needs);
+#X connect 1 0 2 0;
+#X connect 4 0 5 0;
+#X connect 6 0 7 0;
+#X connect 8 0 3 0;
+#X connect 8 0 6 0;
+#X connect 8 0 23 0;
+#X connect 8 1 3 1;
+#X connect 8 1 4 0;
+#X connect 8 1 23 1;
+#X connect 10 0 11 0;
+#X connect 17 0 13 0;
+#X connect 18 0 13 0;
+#X connect 19 0 13 0;
+#X connect 21 0 23 0;
+#X connect 22 0 23 0;
+#X connect 24 0 23 0;
+#X connect 36 0 13 0;

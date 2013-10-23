@@ -1,0 +1,250 @@
+#N canvas 13 0 879 604 10;
+#X obj 16 9 cnv 15 850 60 empty empty OuterSpace 20 12 0 35 -208318
+-66577 0;
+#X obj 17 334 cnv 15 200 260 empty empty SoundGenEngine 20 12 0 14
+-233017 -66577 0;
+#X obj 87 375 noise~;
+#X obj 87 428 sound_gen;
+#X obj 100 557 dac~;
+#X obj 178 487 env~;
+#X floatatom 178 517 5 0 0 0 - - -;
+#X obj 28 494 env~;
+#X floatatom 28 525 5 0 0 0 - - -;
+#X obj 87 454 sound_out;
+#N canvas 488 302 467 542 readme 0;
+#X text 34 12 OUTERSPACE - An ambient sound generator by Alberto Zin
+- 2006;
+#X text 34 457 No warranty at all. The patch is provided "as-is" \,
+without any express or implied warranty. In no event shall the author
+be held liable for any damages arising for use of this patch.;
+#X text 35 65 OuterSpace is an instrument for PureData capable of generating
+audio effects like wind \, water \, "space" sounds.;
+#X text 34 356 The OuterSpace instrument is loosely based on the SpaceDrone
+instrument from Reaktor 5 library but since it is PD it is better (and
+free) :-). Joking.;
+#X text 179 427 WARRANTY;
+#X text 34 110 The instrument is based on white noise filtered by a
+bank of 128 (!) band-pass filters spread across the audible spectrum.
+Each filter contributes to the overall sound as a "voice". Each voice
+has a "quartic" attack and decay amplitude envelope triggered independently
+for a "natural" effect of attack and decay. Each voice is then placed
+in the stereo field and rotated from left to right following a low
+frequency oscillator (LFO) \, plus some spread. High frequencies cam
+be attenuated using a power law (1/x)^d \, where x is the frequency
+and d is the "damp" control. The output is reverberated using freeverb~.
+Few reverb parameters are implemented in the main control GUI. Keep
+an eye to the CPU load. On old machines 128 voices may hang up the
+audio. In this case try to reduce the polyphony to lower numbers. Doing
+so you'll loose the high frequency part of the spectrum but using frequency
+spacing parameter can compensate for this.;
+#X restore 786 45 pd readme;
+#X obj 599 523 cnv 15 223 70 empty empty empty 20 12 0 14 -233017 -66577
+0;
+#N canvas 0 0 474 324 cpu_load 0;
+#X obj 113 259 outlet;
+#X obj 113 170 cputime;
+#X obj 113 30 loadbang;
+#X msg 113 58 1;
+#X floatatom 113 86 0 0 0 0 - - -;
+#X obj 113 142 t b b;
+#X obj 113 230 * 0.1;
+#X obj 113 199 int;
+#X text 158 86 <-- on/off;
+#X obj 113 114 metro 500;
+#X connect 1 0 7 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 9 0;
+#X connect 5 0 1 0;
+#X connect 5 1 1 1;
+#X connect 6 0 0 0;
+#X connect 7 0 6 0;
+#X connect 9 0 5 0;
+#X restore 616 537 pd cpu_load;
+#X floatatom 616 566 5 0 0 0 - - -;
+#X obj 235 334 cnv 15 300 260 empty empty Reverb_(freeverb~) 20 12
+0 14 -233017 -66577 0;
+#X obj 246 422 vsl 15 128 0 3000 0 0 OS_revgain0 OS_revgain0 empty
+0 -8 0 8 -233017 -1 -1 4233 1;
+#X obj 302 422 vsl 15 128 0 100 0 0 OS_WetDry0 OS_WetDry0 empty 0 -8
+0 8 -233017 -1 -1 3810 1;
+#X obj 17 89 cnv 15 565 225 empty empty VoiceControl 20 12 0 14 -233017
+-66577 0;
+#X obj 32 139 vsl 15 128 100 13000 0 0 OS_f00 OS_f00 empty 0 -8 0 8
+-233017 -1 -1 2855 1;
+#X floatatom 30 278 5 0 0 0 - OS_f0 -;
+#X obj 220 140 vsl 15 128 0 100 0 0 OS_LFO_f0 OS_LFO_f0 empty 0 -8
+0 8 -233017 -1 -1 6350 1;
+#X floatatom 220 278 5 0 0 0 - OS_LFO_f -;
+#X obj 119 141 vsl 15 128 50 5000 0 0 OS_f_offset0 OS_f_offset0 empty
+0 -8 0 8 -233017 -1 -1 3207 1;
+#X floatatom 114 279 5 0 0 0 - OS_f_offset -;
+#X obj 332 143 vsl 15 128 30 10000 0 0 OS_attack_t OS_attack_t empty
+0 -8 0 8 -233017 -1 -1 1236 1;
+#X floatatom 332 280 5 0 0 0 - OS_attack_t -;
+#X obj 392 142 vsl 15 128 30 10000 0 0 OS_decay_t OS_decay_t empty
+0 -8 0 8 -233017 -1 -1 89 1;
+#X floatatom 392 279 5 0 0 0 - OS_decay_t -;
+#X obj 453 141 vsl 15 128 50 200 0 0 OS_damp0 OS_damp0 empty 0 -8 0
+8 -233017 -1 -1 3810 1;
+#X floatatom 453 279 5 0 0 0 - OS_damp -;
+#X obj 515 142 vsl 15 128 500 2000 0 0 OS_retrigg OS_retrigg empty
+0 -8 0 8 -233017 -1 -1 169 1;
+#X floatatom 515 279 5 0 0 0 - OS_retrigg -;
+#X obj 515 94 tgl 15 0 OS_retr_onoff OS_retr_onoff empty 0 -6 0 8 -195568
+-1 -1 0 1;
+#X obj 76 140 vsl 15 128 5 130 0 0 OS_Q OS_Q empty 0 -8 0 8 -233017
+-1 -1 7620 1;
+#X floatatom 71 279 5 0 0 0 - OS_Q -;
+#X obj 598 89 cnv 15 270 225 empty empty MainControl 20 12 0 14 -233017
+-66577 0;
+#X obj 621 152 vsl 15 128 0 10000 0 0 OS_Amp0 OS_Amp0 empty 0 -8 0
+8 -260818 -1 -1 381 1;
+#X obj 672 118 tgl 20 0 OS_trigger OS_trigger empty 0 -6 0 8 -260818
+-1 -1 0 1;
+#X text 703 116 ON/OFF;
+#X text 618 130 Volume;
+#X text 670 145 Polyphony (Voices);
+#X obj 276 141 vsl 15 128 0 100 0 0 OS_LFOspread OS_LFOspread empty
+0 -8 0 8 -233017 -1 -1 6350 1;
+#X floatatom 278 279 5 0 0 0 - OS_LFOspread -;
+#X text 538 94 ON/OFF;
+#X text 726 15 Alberto Zin - 2006;
+#X text 31 116 f0;
+#X text 69 117 Res;
+#X text 209 116 PAN LFO;
+#X text 256 116 LFO spr;
+#X text 315 116 Attack;
+#X text 375 116 Decay;
+#X text 424 116 Hi-fr Damp;
+#X text 506 117 Retrigg;
+#X obj 360 422 vsl 15 128 0 100 0 0 OS_RevSize0 OS_RevSize0 empty 0
+-8 0 8 -233017 -1 -1 3810 1;
+#X obj 419 424 vsl 15 128 0 100 0 0 OS_RevDamp0 OS_RevDamp0 empty 0
+-8 0 8 -233017 -1 -1 2540 1;
+#X text 413 395 Damp;
+#X obj 487 423 vsl 15 128 0 100 0 0 OS_RevWidth0 OS_RevWidth0 empty
+0 -8 0 8 -233017 -1 -1 10160 1;
+#X text 456 394 StereoWidth;
+#X text 239 397 Gain;
+#X text 283 396 Wet/Dry;
+#X text 340 396 Room Size;
+#X obj 672 246 hradio 15 1 0 8 OS_preset OS_preset empty 0 -6 0 8 -260818
+-1 -1 6;
+#X text 671 226 Preset;
+#X obj 675 166 hsl 128 15 1 128 0 0 OS_polyphony OS_polyphony empty
+-2 -6 0 8 -260818 -1 -1 12700 1;
+#X obj 675 207 hsl 128 15 0 100 0 0 OS_v_dens OS_v_dens empty -2 -6
+0 8 -260818 -1 -1 127 1;
+#X text 671 186 Voice density;
+#X text 99 116 Fr spac;
+#X obj 169 140 vsl 15 128 0 12 0 0 OS_freq_detune OS_freq_detune empty
+0 -8 0 8 -233017 -1 -1 0 1;
+#X floatatom 169 278 5 0 0 0 - OS_freq_detune -;
+#X text 148 117 Fr detune;
+#X obj 610 368 preset;
+#X obj 610 420 save_load_par;
+#X obj 610 394 random_preset;
+#X obj 610 343 norm_val;
+#X obj 672 288 bng 15 250 50 0 OS_ParSave OS_ParSave empty 0 -6 0 8
+-260818 -1 -1;
+#X text 669 265 Save;
+#X obj 712 288 bng 15 250 50 0 OS_ParLoad OS_ParLoad empty 0 -6 0 8
+-260818 -1 -1;
+#X text 709 265 Load;
+#X obj 750 288 bng 15 250 50 0 OS_random OS_random empty 0 -6 0 8 -260818
+-1 -1;
+#X text 747 265 Randomize;
+#X floatatom 245 570 5 0 0 0 - OS_reverbgain -;
+#X floatatom 620 295 5 0 0 0 - OS_Amp -;
+#X text 333 299 ms;
+#X text 394 299 ms;
+#X text 30 299 Hz;
+#X text 224 299 Hz;
+#X text 161 300 halftones;
+#X text 278 299 %;
+#X text 517 298 ms;
+#X floatatom 815 165 5 0 0 0 - OS_polyphony -;
+#X text 36 49 Ambient sound generator - freeverb~/NO GUI version;
+#N canvas 0 0 476 644 readme_controls 0;
+#X text 11 41 - f0: base frequency [Hz]. All the band pass filters
+are tuned on multiple frequencies of f0 .;
+#X text 13 198 - Fr Detune: frequency detune (Halftones). During the
+attack and decaying phase the sound is detuned by the amount of halftones
+specified here;
+#X text 12 249 - PAN LFO: Panoramic Low Frequency Oscillator [Hz].
+Each voice moves in the stereo panorama with a frequency specified
+here (each voice independent from the others);
+#X text 12 298 - LFO spr: LFO spread. Not all voices moves in the stereo
+field at the same frequency but there will be a certain spread for
+each voice \, specified in % of the PAN LFO.;
+#X text 14 419 - Decay: [ms]. The same as attack.;
+#X text 15 440 - Hi-fr Damp: High-frequencies damping. A damping is
+provided in order to attenuate the very high frequencies which may
+be too loud. The amplitude of each voice is attenuated by the factor
+(1/x)^alpha \, where x is the voice number (1-128) and alpha is the
+parameter set here.;
+#X text 15 518 - Retrigg radio button: Activates the retrigger function
+- Retrigg: [ms]. Retriggering function. If this is not activated the
+attack of each voices is activated exactly when the decay part has
+been finished. Activating the retrigg radio button the attack part
+of each voice is retriggered independently every Retrigg ms.;
+#X text 12 7 PARAMETERS OF THE GRAPHICAL USER INTERFACE - Voice Controls
+;
+#X text 12 76 - Res: resonance control of the band-pass filter. Low
+values produce large bandwidths \, higher values means narrow \, "tuned"
+filter frequency;
+#X text 12 124 - Fr Spac: Frequency spacing (Df). The multiplier of
+the fundamental frequency. At the end \, the central frequency of each
+bp filter will be tuned on f_N = f0 * n * Df + detune \, where n is
+the voice number (1 to 128) and detune is explained later;
+#X text 14 347 - Attack: [ms] similar to the attack time for each voice.
+In reality the true attack time is selected randomly based on random(Attack).
+For the amplitude envelope of each voice \, a "quartic" attack has
+been selected to produce "natural" results.;
+#X restore 717 342 pd readme_controls;
+#N canvas 0 0 500 437 readme_controls2 0;
+#X text 12 8 PARAMETERS OF THE GRAPHICAL USER INTERFACE - Main Controls
+-;
+#X text 13 38 - ON/OFF: activates/deactivates the instrument;
+#X text 12 211 - Preset: changes the parameters for the 8 presets.
+;
+#X text 12 235 - Save: writes the current GUI parameters in a file
+\, to be later loaded. Provide a name for the file (for example with
+default extension .txt) and place them in the /data directory;
+#X text 13 301 - Load: loads a previously saved set of parameters;
+#X text 13 325 - Randomize: the fun of the game! try it to find your
+favourite sound in OuterSpace! Then \, remember to save it!;
+#X text 13 63 - Polyphony: sets the instrument polyphony \, i.e. the
+number of parallel bp~ filters. In order to save CPU \, the voices
+that are not used are turned off using switch~. By lowering the number
+of voices a cut in the high frequencies is obtained. In order to compensate
+for this drawback \, use the "fr. spac" parameter to cover the same
+audio frequencies (but with less voices in between);
+#X text 14 162 - Density: sets the number of voices playing at the
+same time. This parameter has good results with sounds with short attack
+and decay time (i.e. preset 2 \, "Bubbles");
+#X restore 716 368 pd readme_controls2;
+#N canvas 0 0 508 308 readme_controls3 0;
+#X text 9 9 PARAMETERS OF THE GRAPHICAL USER INTERFACE - Reverb Controls
+-;
+#X text 10 55 - Gain: 1st stage of gain (db) \, used to amplify the
+reverb section;
+#X text 11 100 - Wet/Dry: [0-1] parameter that controls the full activation
+of the reverb effect.;
+#X text 12 143 - Room Size: [0-1] small - large room for reverberation
+;
+#X text 11 171 - Damp: [0-1] frequency damping within the reverberation
+algorithm;
+#X text 10 212 - Stereo Width [0-1]: placing of reverberated output
+in the stereo panorama.;
+#X restore 716 393 pd readme_controls3;
+#X symbolatom 778 288 12 0 0 0 - OS_pres_name -;
+#X connect 2 0 3 0;
+#X connect 5 0 6 0;
+#X connect 7 0 8 0;
+#X connect 9 0 4 0;
+#X connect 9 0 7 0;
+#X connect 9 1 4 1;
+#X connect 9 1 5 0;
+#X connect 12 0 13 0;
