@@ -1,4 +1,4 @@
 PureDataPatches
 ===============
 
-collection of verious PureData patches
+collection of various PureData patches
